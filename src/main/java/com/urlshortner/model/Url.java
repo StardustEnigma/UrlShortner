@@ -24,4 +24,6 @@ public class Url {
 
     private LocalDateTime createdAt;
 
+    private Long clickCount=0L;
+
 }

@@ -1,6 +1,9 @@
 package com.urlshortner.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class UrlRequest {
+    @NotBlank
     private String originalUrl;
 
     public String getOriginalUrl() {

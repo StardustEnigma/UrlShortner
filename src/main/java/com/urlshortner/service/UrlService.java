@@ -1,6 +1,7 @@
 package com.urlshortner.service;
 
 
+import com.urlshortner.dto.AnalyticsResponse;
 import com.urlshortner.model.Url;
 
 public interface UrlService {
@@ -10,4 +11,6 @@ public interface UrlService {
     String saveUrl(String url);
 
     String GetOriginalUrl(String code);
+
+    AnalyticsResponse getAnalytics(Long urlId);
 }

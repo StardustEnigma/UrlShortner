@@ -1,5 +1,6 @@
 package com.urlshortner.service;
 
+import com.urlshortner.dto.AnalyticsResponse;
 import com.urlshortner.model.Url;
 import com.urlshortner.repository.UrlRepository;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class UrlServiceImpl implements UrlService {
         String code=generateCode();
         newUrl.setShortCode(code);
         newUrl.setCreatedAt(LocalDateTime.now());
-
+        newUrl.setClickCount(0L);
         urlRepository.save(newUrl);
         return newUrl.getShortCode();
     }
@@ -47,7 +48,22 @@ public class UrlServiceImpl implements UrlService {
     public String GetOriginalUrl(String code) {
         Url url= urlRepository.findByShortCode(code)
                 .orElseThrow(()-> new RuntimeException("Url not found"));
+        url.setClickCount(url.getClickCount()+1);
+        urlRepository.save(url);
 
         return url.getOriginalUrl();
     }
+
+    @Override
+    public AnalyticsResponse getAnalytics(Long urlId) {
+        Url url=urlRepository.findById(urlId).orElseThrow(()->new RuntimeException("Url not found"));
+
+        AnalyticsResponse response=new AnalyticsResponse();
+        response.setShortCode(url.getShortCode());
+        response.setOriginalUrl(url.getOriginalUrl());
+        response.setClickCount(url.getClickCount());
+        response.setCreatedAt(url.getCreatedAt());
+        return response;
+    }
+
 }
