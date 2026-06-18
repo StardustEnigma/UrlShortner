@@ -27,14 +27,14 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public String saveUrl(Url url) {
-        Optional<Url> existing= urlRepository.findByOriginalUrl(url.getOriginalUrl());
+    public String saveUrl(String url) {
+        Optional<Url> existing= urlRepository.findByOriginalUrl(url);
 
         if (existing.isPresent()){
             return existing.get().getShortCode();
         }
         Url newUrl=new Url();
-        newUrl.setOriginalUrl(url.getOriginalUrl());
+        newUrl.setOriginalUrl(url);
         String code=generateCode();
         newUrl.setShortCode(code);
         newUrl.setCreatedAt(LocalDateTime.now());
@@ -45,7 +45,9 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public String GetOriginalUrl(String code) {
-        return urlRepository.findByShortCode(code)
-                .orElse("no url found");
+        Url url= urlRepository.findByShortCode(code)
+                .orElseThrow(()-> new RuntimeException("Url not found"));
+
+        return url.getOriginalUrl();
     }
 }
